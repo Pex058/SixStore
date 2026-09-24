@@ -6,7 +6,19 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [0.2.0] - 2026-09-24
+
+### 🚀 Adicionado / Configurado
+- Leitura dos dados do Firebase (`firebase.txt`) e criação do arquivo `.env` com as chaves de API do projeto `sixstore-d3572`.
+- Integração e inicialização do repositório Git local.
+- Adição do arquivo `firebase.txt` e variações `.env` ao `.gitignore` para proteção de segredos.
+- Criação e envio (push) do repositório público no GitHub: [https://github.com/Pex058/SixStore](https://github.com/Pex058/SixStore).
+- Revalidação do build de produção (`npm run build`) com 0 erros.
+
+---
+
 ## [0.1.0] - 2026-09-24
+
 
 ### 🚀 Adicionado
 - Leitura e especificação técnica baseada no documento `SistemaBGS/DOC_VITRINE_ROUPAS.md`.

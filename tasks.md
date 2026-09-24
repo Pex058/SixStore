@@ -7,9 +7,10 @@ Este arquivo registra o progresso exato do desenvolvimento do projeto **SixStore
 ## 📌 Status Atual do Projeto
 - **Data da Última Atualização:** 24/09/2026
 - **Versão:** 0.1.0
-- **Status de Construção:** Fases 1, 2, 3, 4 e 5 concluídas. `npm run build` executado com **sucesso (0 erros)**.
-- **Conta GitHub Verificada:** `Pex058` (`pauloedu1985@gmail.com`)
-- **Conta Firebase Configurada:** Pendente (aguardando criação da conta/projeto no Firebase pelo usuário. Modo de demonstração Mock Local ativado em `src/services/`).
+- **Status de Construção:** Fases 1, 2, 3, 4, 5 e 6 concluídas. `npm run build` executado com **sucesso (0 erros)**.
+- **Conta GitHub Verificada & Repositório Criado:** `Pex058` (`https://github.com/Pex058/SixStore`)
+- **Conta Firebase Configurada:** Concluído com credenciais do projeto `sixstore-d3572`. Arquivo `.env` configurado.
+
 
 ---
 
@@ -71,9 +72,10 @@ Este arquivo registra o progresso exato do desenvolvimento do projeto **SixStore
 - [x] Gestão de Pedidos/Carrinhos Salvos com alteração de status (`OrdersList.tsx`)
 - [x] Gerador de Links Rastreados (`CampaignLinks.tsx`)
 
-### 🌐 Fase 6: Git, GitHub & Deploy (Próxima Sessão)
+### 🌐 Fase 6: Git, GitHub & Deploy
 - [x] Validação de build (`npm run build` executado com sucesso)
-- [ ] Inicialização de repositório Git local (`git init` em `SixStore`)
-- [ ] Criação do repositório remoto no GitHub (`gh repo create`) e push inicial
-- [ ] Configuração do arquivo `.env` com as chaves reais do Firebase quando criado
-- [ ] Realizar `firebase deploy`
+- [x] Configuração do arquivo `.env` com as credenciais reais do Firebase (`sixstore-d3572`)
+- [x] Inicialização de repositório Git local (`git init` em `SixStore`)
+- [x] Criação do repositório remoto no GitHub (`https://github.com/Pex058/SixStore`) e push inicial
+- [ ] Realizar `firebase deploy` para publicação no Firebase Hosting
+
