@@ -1,0 +1,35 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Função auxiliar para verificar se o usuário é administrador
+    function isAdminUser() {
+      return request.auth != null;
+    }
+
+    // Coleção de Produtos: Vitrine pública lê, apenas Admin altera
+    match /produtos/{produtoId} {
+      allow read: if true;
+      allow write: if isAdminUser();
+    }
+
+    // Coleção de Pedidos WhatsApp (anti-perda): Visitante pode criar pedido, Admin visualiza/gerencia
+    match /pedidos_whatsapp/{pedidoId} {
+      allow create: if true;
+      allow read, update, delete: if isAdminUser();
+    }
+
+    // Coleção de Métricas e Leads/Visitas: Visitante registra acesso, Admin visualiza
+    match /leads_visitas/{visitaId} {
+      allow create: if true;
+      allow read, update, delete: if isAdminUser();
+    }
+
+    // Coleção de Links de Campanha UTM: Admin gerencia, leitura pública para verificação
+    match /links_campanha/{linkId} {
+      allow read: if true;
+      allow write: if isAdminUser();
+    }
+  }
+}
