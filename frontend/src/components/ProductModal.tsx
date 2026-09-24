@@ -30,8 +30,22 @@ export const ProductModal: React.FC<ProductModalProps> = ({
       setQuantidade(1);
       setErroForm('');
       setAdicionadoSucesso(false);
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          aoFechar();
+        }
+      };
+
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
+
+      return () => {
+        document.body.style.overflow = '';
+        window.removeEventListener('keydown', handleKeyDown);
+      };
     }
-  }, [produto]);
+  }, [produto, aoFechar]);
 
   const temPromocao = Boolean(produto.precoPromocional && produto.precoPromocional < produto.precoBase);
   const precoUnitario = temPromocao ? produto.precoPromocional! : produto.precoBase;
@@ -67,9 +81,12 @@ export const ProductModal: React.FC<ProductModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div 
+      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto cursor-pointer"
+      onClick={aoFechar}
+    >
       <div 
-        className="bg-white rounded-3xl max-w-3xl w-full overflow-hidden shadow-2xl relative animate-in fade-in zoom-in-95 duration-200"
+        className="bg-white rounded-3xl max-w-3xl w-full overflow-hidden shadow-2xl relative animate-in fade-in zoom-in-95 duration-200 cursor-default"
         onClick={e => e.stopPropagation()}
       >
         {/* Botão Fechar */}

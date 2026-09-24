@@ -6,6 +6,17 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [0.2.1] - 2026-09-24
+
+### 🎨 Melhorias de UX & Usabilidade (mudar.txt)
+- **Fechamento ao clicar fora do Carrinho:** O carrinho (drawer) agora fecha suavemente ao clicar na área escura de fundo (backdrop).
+- **Botão "Continuar Comprando":** Inserido botão explícito com ícone no rodapé do carrinho para permitir que o cliente retorne imediatamente à navegação da vitrine.
+- **Fechamento ao clicar fora do Pop-up da Roupa:** O modal de detalhes do produto agora também fecha ao clicar fora dele na área escurecida.
+- **Atalhos e Acessibilidade:** Suporte ao fechamento via tecla `Escape` (ESC) e travamento da rolagem da página de fundo (`body scroll lock`) enquanto o modal ou o carrinho estiverem abertos.
+- **Vinculação de Projeto:** Criação do `.firebaserc` associado ao projeto `sixstore-d3572`.
+
+---
+
 ## [0.2.0] - 2026-09-24
 
 ### 🚀 Adicionado / Configurado

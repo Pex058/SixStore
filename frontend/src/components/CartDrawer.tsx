@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { ItemCarrinho, OrigemLead } from '../types';
 import { salvarPedidoWhatsApp, gerarMensagemWhatsApp } from '../services/orders';
-import { X, Trash2, Plus, Minus, ShoppingBag, Send, ShieldCheck, Sparkles } from 'lucide-react';
+import { X, Trash2, Plus, Minus, ShoppingBag, Send, ShieldCheck, Sparkles, ArrowLeft } from 'lucide-react';
 
 interface CartDrawerProps {
   aberto: boolean;
@@ -29,6 +29,24 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   const [clienteNome, setClienteNome] = useState('');
   const [observacoes, setObservacoes] = useState('');
   const [enviando, setEnviando] = useState(false);
+
+  useEffect(() => {
+    if (!aberto) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        aoFechar();
+      }
+    };
+
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [aberto, aoFechar]);
 
   const telefoneLoja = import.meta.env.VITE_WHATSAPP_NUMBER || '5511999999999';
 
@@ -68,9 +86,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-black/50 backdrop-blur-sm flex justify-end transition-opacity">
+    <div 
+      className="fixed inset-0 z-50 overflow-hidden bg-black/50 backdrop-blur-sm flex justify-end transition-opacity cursor-pointer"
+      onClick={aoFechar}
+    >
       <div 
-        className="w-full max-w-md bg-white h-full shadow-2xl flex flex-col justify-between animate-in slide-in-from-right duration-300"
+        className="w-full max-w-md bg-white h-full shadow-2xl flex flex-col justify-between animate-in slide-in-from-right duration-300 cursor-default"
         onClick={e => e.stopPropagation()}
       >
         
@@ -86,6 +107,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           <button
             onClick={aoFechar}
             className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-all"
+            title="Fechar carrinho"
           >
             <X className="w-5 h-5" />
           </button>
@@ -102,9 +124,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               </p>
               <button
                 onClick={aoFechar}
-                className="mt-5 px-5 py-2.5 bg-rose-700 text-white font-semibold text-xs rounded-xl shadow-md hover:bg-rose-800 transition-all"
+                className="mt-5 px-5 py-2.5 bg-rose-700 text-white font-semibold text-xs rounded-xl shadow-md hover:bg-rose-800 transition-all flex items-center gap-2"
               >
-                Explorar Roupas
+                <ArrowLeft className="w-4 h-4" />
+                Continuar Comprando
               </button>
             </div>
           ) : (
@@ -210,11 +233,21 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             <button
               type="submit"
               disabled={enviando}
-              className="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm rounded-2xl shadow-lg shadow-emerald-200 transition-all flex items-center justify-center gap-2 group"
+              className="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm rounded-2xl shadow-lg shadow-emerald-200 transition-all flex items-center justify-center gap-2 group cursor-pointer"
             >
               <Send className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               <span>{enviando ? 'Gravando Pedido...' : 'Enviar Pedido pelo WhatsApp'}</span>
               <Sparkles className="w-4 h-4 text-emerald-200" />
+            </button>
+
+            {/* Botão Continuar Comprando */}
+            <button
+              type="button"
+              onClick={aoFechar}
+              className="w-full py-2.5 px-4 text-xs font-bold text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 text-slate-500" />
+              <span>Continuar Comprando</span>
             </button>
           </form>
         )}

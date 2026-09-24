@@ -6,10 +6,11 @@ Este arquivo registra o progresso exato do desenvolvimento do projeto **SixStore
 
 ## 📌 Status Atual do Projeto
 - **Data da Última Atualização:** 24/09/2026
-- **Versão:** 0.1.0
-- **Status de Construção:** Fases 1, 2, 3, 4, 5 e 6 concluídas. `npm run build` executado com **sucesso (0 erros)**.
+- **Versão:** 0.2.1
+- **Status de Construção:** Fases 1 a 6 concluídas. Itens do `mudar.txt` implementados. `npm run build` executado com **sucesso (0 erros)**.
 - **Conta GitHub Verificada & Repositório Criado:** `Pex058` (`https://github.com/Pex058/SixStore`)
-- **Conta Firebase Configurada:** Concluído com credenciais do projeto `sixstore-d3572`. Arquivo `.env` configurado.
+- **Conta Firebase Configurada:** Concluído com credenciais do projeto `sixstore-d3572` (`campolargob2b@gmail.com`). Arquivo `.env` configurado.
+- **Melhorias de Usabilidade:** Fechamento por clique fora (backdrop click) e tecla ESC no carrinho e modal de produto, botão "Continuar Comprando" e trava de scroll de fundo implementados.
 
 
 ---
