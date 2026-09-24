@@ -1,6 +1,6 @@
 import { initializeApp, getApps } from 'firebase/app';
 import type { FirebaseApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { initializeFirestore, getFirestore } from 'firebase/firestore';
 import type { Firestore } from 'firebase/firestore';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import type { Auth } from 'firebase/auth';
@@ -28,7 +28,13 @@ let storage: FirebaseStorage | undefined;
 
 if (isFirebaseConfigured) {
   app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-  db = getFirestore(app);
+  try {
+    db = initializeFirestore(app, {
+      ignoreUndefinedProperties: true
+    });
+  } catch {
+    db = getFirestore(app);
+  }
   auth = getAuth(app);
   storage = getStorage(app);
 } else {
@@ -38,4 +44,8 @@ if (isFirebaseConfigured) {
 }
 
 export const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({
+  prompt: 'select_account'
+});
+
 export { app, db, auth, storage };

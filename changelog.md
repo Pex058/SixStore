@@ -6,6 +6,22 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [0.3.0] - 2026-09-24
+
+### 🔐 Autenticação Google & Permissões do Painel Admin
+- **Login com Conta Google:** Implementada integração com o Firebase Authentication via Google Provider (`signInWithPopup`).
+- **Lista de Autorização Restrita:** Painel admin configurado exclusivamente para o e-mail autorizado: `pauloedu1985@gmail.com`. Tentativas de acesso com outras contas Google são imediatamente bloqueadas e desconectadas com notificação visual.
+- **Header do Administrador:** Exibição da foto, nome e e-mail do usuário Google autenticado no topo do painel, com botão de logout funcional.
+- **Regras do Firestore Atualizadas:** Regras de segurança NoSQL atualizadas e publicadas no projeto Firebase `sixstore-d3572` exigindo `request.auth.token.email == 'pauloedu1985@gmail.com'` para todas as operações administrativas.
+
+### 🛒 Gravação do Carrinho & Sincronização em Tempo Real (WhatsApp Checkout)
+- **Persistência Anti-Perda Garantida:** Implementada sanitização de dados (`sanitizeData`) e configuração `ignoreUndefinedProperties: true` no Firestore para evitar que campos opcionais/indefinidos (como parâmetros de UTM) causem falha na criação do documento.
+- **Geração e Gravação de ID no Documento:** Pedidos agora geram o ID único do Firestore antecipadamente e salvam o pedido completo no Firestore antes de redirecionar o cliente para o WhatsApp.
+- **Sincronização em Tempo Real (`onSnapshot`):** A lista de pedidos do painel administrativo agora recebe atualizações instantâneas via listener em tempo real, sem necessidade de atualizar a página quando um novo cliente envia o carrinho.
+- **Ajustes de Hooks e Conformidade:** Corrigida a ordem dos hooks no `ProductModal.tsx` e `CartDrawer.tsx`, assegurando 0 erros de linting e build de produção 100% validado.
+
+---
+
 ## [0.2.1] - 2026-09-24
 
 ### 🎨 Melhorias de UX & Usabilidade (mudar.txt)

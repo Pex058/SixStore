@@ -3,9 +3,9 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Função auxiliar para verificar se o usuário é administrador
+    // Função auxiliar para verificar se o usuário é administrador autorizado
     function isAdminUser() {
-      return request.auth != null;
+      return request.auth != null && request.auth.token.email == 'pauloedu1985@gmail.com';
     }
 
     // Coleção de Produtos: Vitrine pública lê, apenas Admin altera

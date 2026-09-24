@@ -24,8 +24,6 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   valorTotal,
   origemLead
 }) => {
-  if (!aberto) return null;
-
   const [clienteNome, setClienteNome] = useState('');
   const [observacoes, setObservacoes] = useState('');
   const [enviando, setEnviando] = useState(false);
@@ -47,6 +45,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [aberto, aoFechar]);
+
+  if (!aberto) return null;
 
   const telefoneLoja = import.meta.env.VITE_WHATSAPP_NUMBER || '5511999999999';
 
@@ -76,7 +76,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
       limparCarrinho();
       aoFechar();
 
-      window.open(urlWhatsApp, '_blank');
+      const novaAba = window.open(urlWhatsApp, '_blank');
+      if (!novaAba || novaAba.closed || typeof novaAba.closed === 'undefined') {
+        window.location.href = urlWhatsApp;
+      }
     } catch (error) {
       console.error('Erro ao finalizar pedido:', error);
       alert('Ocorreu um erro ao processar seu pedido. Tente novamente.');

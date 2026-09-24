@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { PedidoWhatsApp, StatusPedido } from '../../types';
-import { getPedidosWhatsApp, atualizarStatusPedido } from '../../services/orders';
+import { getPedidosWhatsApp, subscribePedidosWhatsApp, atualizarStatusPedido } from '../../services/orders';
 import { ShoppingBag, RefreshCw, MessageSquare, Clock, CheckCircle2, XCircle, Filter, ExternalLink } from 'lucide-react';
 
 export const OrdersList: React.FC = () => {
@@ -21,7 +21,21 @@ export const OrdersList: React.FC = () => {
   };
 
   useEffect(() => {
-    carregarPedidos();
+    setCarregando(true);
+    const unsubscribe = subscribePedidosWhatsApp(
+      (novosPedidos) => {
+        setPedidos(novosPedidos);
+        setCarregando(false);
+      },
+      (erro) => {
+        console.warn('Fallback no listener de pedidos:', erro);
+        carregarPedidos();
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const handleMudarStatus = async (id: string, novoStatus: StatusPedido) => {

@@ -13,8 +13,6 @@ export const ProductModal: React.FC<ProductModalProps> = ({
   aoFechar,
   aoAdicionarAoCarrinho
 }) => {
-  if (!produto) return null;
-
   const [fotoSelecionada, setFotoSelecionada] = useState<string>('');
   const [corSelecionada, setCorSelecionada] = useState<string>('');
   const [tamanhoSelecionado, setTamanhoSelecionado] = useState<string>('');
@@ -46,6 +44,8 @@ export const ProductModal: React.FC<ProductModalProps> = ({
       };
     }
   }, [produto, aoFechar]);
+
+  if (!produto) return null;
 
   const temPromocao = Boolean(produto.precoPromocional && produto.precoPromocional < produto.precoBase);
   const precoUnitario = temPromocao ? produto.precoPromocional! : produto.precoBase;

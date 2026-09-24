@@ -1,3 +1,0 @@
-vamos alterar algumas coisas:
-O carrinho precisa sumir ao clicar fora dele, recolher, pois a pessoa querendo comprar mais nem sempre vai clicar em fechar, pode até clicar em voltar no navegador, ou colocamos um botão continuar comprando que volta pra página onde o cliente estava.
-o pop-up de exibição da roupa também pode seguir o principio de o usuário clicar fora e fechar o pop-up.

@@ -1,8 +1,36 @@
 import { db, isFirebaseConfigured } from './firebase';
-import { collection, addDoc, getDocs, doc, updateDoc, query, orderBy } from 'firebase/firestore';
+import { 
+  collection, 
+  doc, 
+  setDoc, 
+  getDocs, 
+  updateDoc, 
+  query, 
+  orderBy, 
+  onSnapshot 
+} from 'firebase/firestore';
 import type { PedidoWhatsApp, StatusPedido } from '../types';
 
 const LOCAL_STORAGE_ORDERS_KEY = 'sixstore_pedidos_mock';
+
+export function sanitizeData<T>(obj: T): T {
+  if (obj === null || obj === undefined) {
+    return obj;
+  }
+  if (Array.isArray(obj)) {
+    return obj.map(item => sanitizeData(item)) as unknown as T;
+  }
+  if (typeof obj === 'object') {
+    const result: Record<string, any> = {};
+    for (const [key, value] of Object.entries(obj)) {
+      if (value !== undefined) {
+        result[key] = sanitizeData(value);
+      }
+    }
+    return result as T;
+  }
+  return obj;
+}
 
 const getMockPedidos = (): PedidoWhatsApp[] => {
   const stored = localStorage.getItem(LOCAL_STORAGE_ORDERS_KEY);
@@ -21,30 +49,44 @@ const saveMockPedidos = (pedidos: PedidoWhatsApp[]) => {
 };
 
 export const salvarPedidoWhatsApp = async (pedido: PedidoWhatsApp): Promise<string> => {
-  const novoPedido: PedidoWhatsApp = {
-    ...pedido,
-    createdAt: new Date().toISOString()
-  };
+  const agora = new Date().toISOString();
 
   if (!isFirebaseConfigured || !db) {
     const mockId = `PED-${Math.floor(10000 + Math.random() * 90000)}`;
-    novoPedido.id = mockId;
+    const fallback: PedidoWhatsApp = {
+      ...pedido,
+      id: mockId,
+      createdAt: agora
+    };
     const pedidos = getMockPedidos();
-    pedidos.unshift(novoPedido);
+    pedidos.unshift(fallback);
     saveMockPedidos(pedidos);
     return mockId;
   }
 
   try {
     const colRef = collection(db, 'pedidos_whatsapp');
-    const docRef = await addDoc(colRef, novoPedido);
+    const docRef = doc(colRef);
+    const novoPedido: PedidoWhatsApp = {
+      ...pedido,
+      id: docRef.id,
+      createdAt: agora
+    };
+
+    const dadosLimpos = sanitizeData(novoPedido);
+    await setDoc(docRef, dadosLimpos);
+    console.log('✅ [SixStore] Pedido gravado no Firestore com sucesso! ID:', docRef.id);
     return docRef.id;
   } catch (error) {
-    console.error('Erro ao salvar pedido no Firestore:', error);
+    console.error('❌ [SixStore] Erro ao salvar pedido no Firestore, armazenando localmente:', error);
     const mockId = `PED-${Math.floor(10000 + Math.random() * 90000)}`;
-    novoPedido.id = mockId;
+    const fallback: PedidoWhatsApp = {
+      ...pedido,
+      id: mockId,
+      createdAt: agora
+    };
     const pedidos = getMockPedidos();
-    pedidos.unshift(novoPedido);
+    pedidos.unshift(fallback);
     saveMockPedidos(pedidos);
     return mockId;
   }
@@ -64,9 +106,50 @@ export const getPedidosWhatsApp = async (): Promise<PedidoWhatsApp[]> => {
       ...docSnap.data()
     })) as PedidoWhatsApp[];
   } catch (error) {
-    console.error('Erro ao buscar pedidos:', error);
-    return getMockPedidos();
+    console.warn('Tentando busca sem ordenação após falha inicial:', error);
+    try {
+      const colRef = collection(db, 'pedidos_whatsapp');
+      const snapshot = await getDocs(colRef);
+      const lista = snapshot.docs.map(docSnap => ({
+        id: docSnap.id,
+        ...docSnap.data()
+      })) as PedidoWhatsApp[];
+      return lista.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    } catch (e) {
+      console.error('Erro definitivo ao buscar pedidos:', e);
+      return getMockPedidos();
+    }
   }
+};
+
+export const subscribePedidosWhatsApp = (
+  aoAtualizar: (pedidos: PedidoWhatsApp[]) => void,
+  aoErro?: (erro: any) => void
+): (() => void) => {
+  if (!isFirebaseConfigured || !db) {
+    aoAtualizar(getMockPedidos());
+    return () => {};
+  }
+
+  const colRef = collection(db, 'pedidos_whatsapp');
+  const q = query(colRef, orderBy('createdAt', 'desc'));
+
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      const pedidos = snapshot.docs.map(docSnap => ({
+        id: docSnap.id,
+        ...docSnap.data()
+      })) as PedidoWhatsApp[];
+      aoAtualizar(pedidos);
+    },
+    (error) => {
+      console.error('Erro no snapshot de pedidos:', error);
+      if (aoErro) aoErro(error);
+      // Fallback para get manual
+      getPedidosWhatsApp().then(aoAtualizar);
+    }
+  );
 };
 
 export const atualizarStatusPedido = async (id: string, status: StatusPedido): Promise<void> => {
