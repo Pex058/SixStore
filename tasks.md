@@ -77,5 +77,6 @@ Este arquivo registra o progresso exato do desenvolvimento do projeto **SixStore
 - [x] Configuração do arquivo `.env` com as credenciais reais do Firebase (`sixstore-d3572`)
 - [x] Inicialização de repositório Git local (`git init` em `SixStore`)
 - [x] Criação do repositório remoto no GitHub (`https://github.com/Pex058/SixStore`) e push inicial
-- [ ] Realizar `firebase deploy` para publicação no Firebase Hosting
+- [x] Publicação online concluída via `firebase deploy`: **[https://sixstore-d3572.web.app](https://sixstore-d3572.web.app)**
+
 
