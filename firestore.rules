@@ -14,6 +14,11 @@ service cloud.firestore {
       allow write: if isAdminUser();
     }
 
+    match /configuracoes/{configId} {
+      allow read: if true;
+      allow write: if isAdminUser();
+    }
+
     // Coleção de Pedidos WhatsApp (anti-perda): Visitante pode criar pedido, Admin visualiza/gerencia
     match /pedidos_whatsapp/{pedidoId} {
       allow create: if true;

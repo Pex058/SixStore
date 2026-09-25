@@ -6,11 +6,11 @@ Este arquivo registra o progresso exato do desenvolvimento do projeto **SixStore
 
 ## 📌 Status Atual do Projeto
 - **Data da Última Atualização:** 24/09/2026
-- **Versão:** 0.3.0
-- **Status de Construção:** Autenticação Google configurada no painel admin (exclusiva para `pauloedu1985@gmail.com`). Gravação de carrinho/pedidos WhatsApp no Firestore com sanitização e listener em tempo real (`onSnapshot`) implementados. Build de produção executado com **sucesso (0 erros)**.
+- **Versão:** 0.3.1
+- **Status de Construção:** Causa raiz do sumiço dos produtos corrigida. Catálogo restaurado no Firestore a partir dos produtos locais do PC (`MOCK_PRODUTOS`), preservando as edições feitas no produto 2. Listener em tempo real (`subscribeProdutos`), sanitização de dados no salvamento (`sanitizeData`) e regras de segurança reforçadas (`isAdminUser()`) no Firestore.
 - **Conta GitHub Verificada & Repositório Criado:** `Pex058` (`https://github.com/Pex058/SixStore`)
-- **Conta Firebase Configurada:** Concluído com credenciais do projeto `sixstore-d3572`. Regras do Firestore publicadas exigindo autenticação do e-mail admin autorizado.
-- **Painel Administrativo:** Acesso restrito via Google Sign-In, logout seguro e sincronização em tempo real de novos pedidos.
+- **Conta Firebase Configurada:** Concluído com credenciais do projeto `sixstore-d3572`. Regras do Firestore e Firebase Hosting 100% implantados.
+- **Painel Administrativo:** Acesso restrito via Google Sign-In (`pauloedu1985@gmail.com`), logout seguro, gestão de catálogo com sincronização instantânea em tempo real e lista de pedidos WhatsApp anti-perda.
 
 
 ---

@@ -5,9 +5,9 @@ import {
   doc, 
   setDoc, 
   deleteDoc, 
-  query, 
-  orderBy 
+  onSnapshot 
 } from 'firebase/firestore';
+import { sanitizeData } from './orders';
 import type { Produto } from '../types';
 
 export const MOCK_PRODUTOS: Produto[] = [
@@ -142,21 +142,64 @@ export const getProdutos = async (): Promise<Produto[]> => {
 
   try {
     const colRef = collection(db, 'produtos');
-    const q = query(colRef, orderBy('createdAt', 'desc'));
-    const snapshot = await getDocs(q);
+    const snapshot = await getDocs(colRef);
     
     if (snapshot.empty) {
       return getMockProdutos();
     }
 
-    return snapshot.docs.map(docSnap => ({
+    const produtos = snapshot.docs.map(docSnap => ({
       id: docSnap.id,
       ...docSnap.data()
     })) as Produto[];
+
+    return produtos.sort((a, b) => {
+      const dataA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const dataB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return dataB - dataA;
+    });
   } catch (error) {
     console.error('Erro ao carregar produtos do Firestore:', error);
     return getMockProdutos();
   }
+};
+
+export const subscribeProdutos = (
+  aoAtualizar: (produtos: Produto[]) => void,
+  aoErro?: (erro: any) => void
+): (() => void) => {
+  if (!isFirebaseConfigured || !db) {
+    aoAtualizar(getMockProdutos());
+    return () => {};
+  }
+
+  const colRef = collection(db, 'produtos');
+  return onSnapshot(
+    colRef,
+    (snapshot) => {
+      if (snapshot.empty) {
+        aoAtualizar(getMockProdutos());
+        return;
+      }
+      const produtos = snapshot.docs.map(docSnap => ({
+        id: docSnap.id,
+        ...docSnap.data()
+      })) as Produto[];
+
+      produtos.sort((a, b) => {
+        const dataA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dataB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return dataB - dataA;
+      });
+
+      aoAtualizar(produtos);
+    },
+    (error) => {
+      console.error('Erro no snapshot de produtos:', error);
+      if (aoErro) aoErro(error);
+      getProdutos().then(aoAtualizar);
+    }
+  );
 };
 
 export const salvarProduto = async (produto: Produto): Promise<void> => {
@@ -173,7 +216,8 @@ export const salvarProduto = async (produto: Produto): Promise<void> => {
   }
 
   const docRef = doc(db, 'produtos', produto.id);
-  await setDoc(docRef, produto, { merge: true });
+  const produtoLimpo = sanitizeData(produto);
+  await setDoc(docRef, produtoLimpo, { merge: true });
 };
 
 export const deletarProduto = async (id: string): Promise<void> => {

@@ -4,7 +4,7 @@ import { ProductCard } from './components/ProductCard';
 import { ProductModal } from './components/ProductModal';
 import { CartDrawer } from './components/CartDrawer';
 import { AdminDashboard } from './components/ProtectedRoute';
-import { getProdutos } from './services/products';
+import { getProdutos, subscribeProdutos } from './services/products';
 import { useCart } from './hooks/useCart';
 import { useTracking } from './hooks/useTracking';
 import type { Produto } from './types';
@@ -24,7 +24,6 @@ export function App() {
   const origemLead = useTracking();
 
   const carregarProdutos = async () => {
-    setCarregando(true);
     try {
       const dados = await getProdutos();
       setProdutos(dados);
@@ -36,7 +35,17 @@ export function App() {
   };
 
   useEffect(() => {
-    carregarProdutos();
+    const unsubscribe = subscribeProdutos(
+      (dados) => {
+        setProdutos(dados);
+        setCarregando(false);
+      },
+      (err) => {
+        console.error('Erro na sincronização de produtos:', err);
+        carregarProdutos();
+      }
+    );
+    return () => unsubscribe();
   }, []);
 
   // Extrair lista de categorias únicas

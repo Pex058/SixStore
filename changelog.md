@@ -4,6 +4,16 @@ Todas as modificações notáveis no projeto **SixStore** serão documentadas ne
 
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/), e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [0.3.1] - 2026-09-24
+
+### 🛠️ Correção da Causa Raiz dos Produtos Sumidos & Sincronização em Tempo Real
+- **Diagnóstico da Causa Raiz:** O Firestore inicial não continha documentos e operava no modo fallback com dados mock do código do PC. Ao editar e salvar a primeira peça (`prod_2`), o banco passou a ter 1 item, fazendo a consulta ignorar o mock e exibir apenas o produto salvo, ocultando os outros 3 produtos que nunca haviam sido persistidos.
+- **Restauração Completa dos Produtos:** Utilizados os produtos locais do PC (`MOCK_PRODUTOS`) para persistir `prod_1`, `prod_3` e `prod_4` no Firestore, preservando integralmente a nova foto e edições feitas pelo usuário no `prod_2`.
+- **Sincronização em Tempo Real do Catálogo (`subscribeProdutos`):** Implementado listener `onSnapshot` no catálogo de produtos, atualizando a vitrine e o painel admin instantaneamente a cada edição, criação ou exclusão.
+- **Sanitização de Dados no Produto (`salvarProduto`):** Integrada a função `sanitizeData` para evitar que propriedades opcionais com valor `undefined` (como `precoPromocional`) causem erro na gravação do Firestore.
+- **Busca Resiliente de Produtos (`getProdutos`):** Eliminação de omissões silenciosas que ocorriam com `orderBy('createdAt')` do Firestore, garantindo que todo produto cadastrado seja sempre retornado e ordenado em memória.
+- **Reforço de Segurança nas Regras (`firestore.rules`):** Regras de segurança em `/produtos` e `/configuracoes` travadas com `allow write: if isAdminUser();` e reimplantadas no Cloud Firestore.
+
 ---
 
 ## [0.3.0] - 2026-09-24
