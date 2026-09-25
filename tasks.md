@@ -21,7 +21,8 @@ Este arquivo registra o progresso exato do desenvolvimento do projeto **SixStore
 | :--- | :--- | :--- |
 | `SixStore/frontend/src/types/index.ts` | Interfaces TypeScript (Produto, Variantes, ItemCarrinho, PedidoWhatsApp, LinkCampanha, OrigemLead) | Concluído |
 | `SixStore/frontend/src/services/firebase.ts` | Inicialização do Firebase com Fallback gracioso | Concluído |
-| `SixStore/frontend/src/services/products.ts` | Serviços de CRUD de Produtos (Firestore + Mock Local) | Concluído |
+| `SixStore/frontend/src/services/auth.ts` | Autenticação Google exclusiva para o e-mail autorizado (`pauloedu1985@gmail.com`) | Concluído |
+| `SixStore/frontend/src/services/products.ts` | Serviços de CRUD de Produtos (Firestore + Mock Local + Real-time Sync) | Concluído |
 | `SixStore/frontend/src/services/orders.ts` | Gravação Anti-Perda no Firestore + Formatação do Link WhatsApp | Concluído |
 | `SixStore/frontend/src/services/tracking.ts` | Leitura de UTMs, cliques e links de campanha | Concluído |
 | `SixStore/frontend/src/hooks/useCart.ts` | Hook de gerenciamento do carrinho com localStorage | Concluído |
@@ -30,9 +31,9 @@ Este arquivo registra o progresso exato do desenvolvimento do projeto **SixStore
 | `SixStore/frontend/src/components/ProductCard.tsx` | Card de roupas com preço promocional e badges | Concluído |
 | `SixStore/frontend/src/components/ProductModal.tsx` | Modal de detalhes, fotos e seleção de cor/tamanho | Concluído |
 | `SixStore/frontend/src/components/CartDrawer.tsx` | Gaveta flutuante do carrinho com checkout WhatsApp | Concluído |
-| `SixStore/frontend/src/components/ProtectedRoute.tsx` | Dashboard Administrativo com controle de acesso | Concluído |
+| `SixStore/frontend/src/components/ProtectedRoute.tsx` | Dashboard Administrativo com controle de acesso Google | Concluído |
 | `SixStore/frontend/src/components/Admin/ProductForm.tsx` | Formulário de criação e edição de roupas | Concluído |
-| `SixStore/frontend/src/components/Admin/OrdersList.tsx` | Tabela de acompanhamento dos pedidos salvos | Concluído |
+| `SixStore/frontend/src/components/Admin/OrdersList.tsx` | Tabela de acompanhamento dos pedidos salvos em tempo real | Concluído |
 | `SixStore/frontend/src/components/Admin/CampaignLinks.tsx` | Gerador e rastreador de URLs com UTM | Concluído |
 | `SixStore/frontend/src/App.tsx` | Integração principal da aplicação | Concluído |
 | `SixStore/firebase.json` | Configuração de Hosting e Firestore para Firebase | Concluído |
@@ -67,10 +68,11 @@ Este arquivo registra o progresso exato do desenvolvimento do projeto **SixStore
 - [x] Captura automática de `ref`, `utm_source`, `utm_medium`, `utm_campaign` (`useTracking.ts`)
 - [x] Associação da origem a cada pedido gerado
 
-### 🔐 Fase 5: Painel Administrativo
-- [x] Tela de Login/Acesso do Admin (Senha demo: `admin123`)
+### 🔐 Fase 5: Painel Administrativo & Autenticação Google
+- [x] Login Administrativo via Google Auth restrito exclusivamente a `pauloedu1985@gmail.com` (`auth.ts` e `ProtectedRoute.tsx`)
+- [x] Desconexão automática e bloqueio de usuários não autorizados
 - [x] Formulário de Cadastro/Edição de Roupas com fotos e variações (`ProductForm.tsx`)
-- [x] Gestão de Pedidos/Carrinhos Salvos com alteração de status (`OrdersList.tsx`)
+- [x] Gestão de Pedidos/Carrinhos Salvos com alteração de status e listener em tempo real (`OrdersList.tsx`)
 - [x] Gerador de Links Rastreados (`CampaignLinks.tsx`)
 
 ### 🌐 Fase 6: Git, GitHub & Deploy
@@ -79,5 +81,12 @@ Este arquivo registra o progresso exato do desenvolvimento do projeto **SixStore
 - [x] Inicialização de repositório Git local (`git init` em `SixStore`)
 - [x] Criação do repositório remoto no GitHub (`https://github.com/Pex058/SixStore`) e push inicial
 - [x] Publicação online concluída via `firebase deploy`: **[https://sixstore-d3572.web.app](https://sixstore-d3572.web.app)**
+
+### 🛡️ Fase 7: Estabilidade do Catálogo, Anti-Perda & Sincronização em Tempo Real
+- [x] Identificação da causa raiz do sumiço de produtos e restauração dos 4 produtos no Firestore
+- [x] Preservação das edições do usuário no produto 2 (Blusa Manga Longa Seda Premium)
+- [x] Sincronização em tempo real do catálogo (`subscribeProdutos`) para vitrine e admin
+- [x] Sanitização de dados com `sanitizeData` em produtos e pedidos
+- [x] Reforço das regras de segurança NoSQL (`isAdminUser()`) no Cloud Firestore
 
 
